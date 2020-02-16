@@ -24,7 +24,7 @@ module.exports = {
             return message.reply("Please add the skill you want to be added too. you can choose from the following skills: ```\r" +  skillsallowed.join('\r').toLowerCase() + "```");
         }
 
-        
+        const arg = args.split(' ');
         let command = args.shift();
         command = command.toUpperCase();
         const username = message.author.username;

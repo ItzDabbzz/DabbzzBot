@@ -1,5 +1,8 @@
 // This event executes when a new member joins a server. Let's welcome them!
-
+// guildMemberAdd
+/* Emitted whenever a user joins a guild.
+PARAMETER     TYPE               DESCRIPTION
+member        GuildMember        The member that has joined a guild    */
 module.exports = (client, member) => {
     // Load the guild's settings
     const settings = client.getSettings(member.guild.id);

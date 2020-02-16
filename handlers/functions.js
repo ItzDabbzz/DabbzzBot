@@ -34,14 +34,17 @@ module.exports = (client) => {
     // And then they're stuck because the default settings are also gone.
     // So if you do that, you're resetting your defaults. Congrats.
     const defaultSettings = {
-        "prefix": "~",
+        "prefix": "-",
         "modLogChannel": "mod-log",
-        "modRole": "Moderator",
-        "adminRole": "Administrator",
-        "systemNotice": "true",
+        "modRole": "Mod",
+        "adminRole": "Admin",
+        "systemNotice": "true", // This gives a notice when a user tries to run a command that they do not have permission to use.
         "welcomeChannel": "welcome",
         "welcomeMessage": "Say hello to {{user}}, everyone! We all need a warm welcome sometimes :D",
-        "welcomeEnabled": "false"
+        "welcomeEnabled": "false",
+        "tlogChannel": "620316098390392885",
+        "clogChannel": "620316099296362506",
+        "discordinvite": "true",
     };
 
     // getSettings merges the client defaults with the guild settings. guild settings in

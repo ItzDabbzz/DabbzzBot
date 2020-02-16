@@ -61,7 +61,7 @@ module.exports = async (client, message) => {
 
           // Discord Invite Detector
         const invite = ['discord.gg', 'discord.io', 'discord.me'];
-        if (client.settings.get('discordinvite') == true) {
+        if (settings.discordinvite == true) {
             if (invite.some(word => message.content.toLowerCase().includes(word))) {
             message.delete().catch(O_o => {});
 

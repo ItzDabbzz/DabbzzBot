@@ -1,6 +1,13 @@
 const { RichEmbed } = require("discord.js");
 const { stripIndents } = require("common-tags");
 
+exports.conf = {
+    enabled: true,
+    guildOnly: false,
+    aliases: ["h", "halp"],
+    permLevel: "User"
+  };
+
 module.exports = {
     name: "help",
     aliases: ["h"],

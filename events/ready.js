@@ -1,6 +1,7 @@
+// ready
+/* Emitted when the client becomes ready to start working.    */
+
 module.exports = async (client) => {
-
-
 
     console.log(`Hi, ${client.user.username} is now online!`);
 

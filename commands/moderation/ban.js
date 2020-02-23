@@ -9,6 +9,8 @@ module.exports = {
     usage: "<id | mention>",
     run: async (client, message, args) => {
         const logChannel = message.guild.channels.find(c => c.name === "mod-logs") || message.channel;
+        const modLogs = await client.db.r.table("guilds").get(message.guild.id).getField("modLogChannel").run();
+        const type = "ban";
 
         if (message.deletable) message.delete();
 
@@ -37,7 +39,8 @@ module.exports = {
         }
 
         const toBan = message.mentions.members.first() || message.guild.members.get(args[0]);
-
+        const user = message.mentions.members.first() || message.guild.members.get(args[0]);
+        const reason = args.slice(1).join(" ");
         // No member found
         if (!toBan) {
             return message.reply("Couldn't find that member, try again")
@@ -55,12 +58,14 @@ module.exports = {
             return message.reply("I can't ban that person due to role hierarchy, I suppose.")
                 .then(m => m.delete(5000));
         }
+
+
         
         const embed = new RichEmbed()
             .setColor("#ff0000")
             .setThumbnail(toBan.user.displayAvatarURL)
-            .setFooter(message.member.displayName, message.author.displayAvatarURL)
-            .setTimestamp()
+            .setFooter(`${client.config.footer} | ${message.member.displayName}`, message.author.displayAvatarURL)
+            .setTimestamp(Date.now())
             .setDescription(stripIndents`**> baned member:** ${toBan} (${toBan.id})
             **> baned by:** ${message.member} (${message.member.id})
             **> Reason:** ${args.slice(1).join(" ")}`);
@@ -69,6 +74,8 @@ module.exports = {
             .setColor("GREEN")
             .setAuthor(`This verification becomes invalid after 30s.`)
             .setDescription(`Do you want to ban ${toBan}?`)
+            .setFooter(`${client.config.footer}`)
+            .setTimestamp(Date.now());
 
         // Send the message
         await message.channel.send(promptEmbed).then(async msg => {
@@ -78,13 +85,14 @@ module.exports = {
             // Verification stuffs
             if (emoji === "✅") {
                 msg.delete();
-
+                await client.db.createPunish(client, message, type, user, reason, modLogs);
+                client.logger.log(`User Banned ${toBan}`);
                 toBan.ban(args.slice(1).join(" "))
                     .catch(err => {
                         if (err) return message.channel.send(`Well.... the ban didn't work out. Here's the error ${err}`)
                     });
 
-                logChannel.send(embed);
+                //logChannel.send(embed);
             } else if (emoji === "❌") {
                 msg.delete();
 

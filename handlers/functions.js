@@ -1,4 +1,149 @@
+const { Client, RichEmbed } = require('discord.js');
+const errors = require('./errors')
+const config = require('../config')
 module.exports = (client) => {
+
+    client.findLogs = async (client, message, modLogs) => {
+        const prefix = await client.db.r.table("guilds").get(message.guild.id).getField("prefix").run();
+        if (!modLogs || !message.guild.channels.find(c => c.name === modLogs)) {
+            const embed = new RichEmbed()
+                .setTitle("An error has occurred!")
+                .setDescription(`No log channel found with the name \`${modLogs}\`.`)
+                .setColor(config.embedRed)
+                .setFooter(`${client.config.footer} |  Use ${prefix}edit modlogs to change this.`);
+            return message.channel.send(embed), false;
+        } else {
+            return true;
+        }
+    };
+
+    client.findPunishment = async (message, punishment) => {
+        if (!punishment) {
+            const embed = new RichEmbed()
+                .setTitle('An error has occurred!')
+                .setDescription(`A punishment with the specified ID hasn't been found.`)
+                .setColor(config.embedRed)
+                .setFooter(`${client.config.footer} | ${message.author.tag}`, message.author.avatarURL);
+            return message.channel.send(embed), false;
+        } else {
+            return true;
+        }
+    };
+
+    client.findTicket = async (message, ticket) => {
+        if (!ticket) {
+            const embed = new RichEmbed()
+                .setTitle('An error has occurred!')
+                .setDescription(`A ticket with the specified ID hasn't been found.`)
+                .setColor(config.embedRed)
+                .setFooter(`${client.config.footer} | ${message.author.tag}`, message.author.avatarURL);
+            return message.channel.send(embed), false;
+        } else {
+            return true;
+        }
+    };
+
+    client.sendTicket = async (message, channel, department, user, reason, id) => {
+        let embed = new RichEmbed()
+            .setTitle(":ticket: Ticket Logs")
+            .setDescription(`Guild name: ${message.guild.name}`)
+            .setColor(config.embedAqua)
+            .setTimestamp()
+            .addField("User:", `${user} (${user.id})`, true)
+            .addField("Department:", `${department}`, true)
+            .addField("Reason:", reason, true)
+            .setFooter(`${client.config.footer}| ID: ${id}`);
+        let tLogsChannel = message.guild.channels.find(c => c.name === "ticket-logs");
+        if (!tLogsChannel) return await errors.couldNotLog(message, "ticket-logs");
+        if (!tLogsChannel.permissionsFor(message.guild.me).has("EMBED_LINKS")) {
+            return await tLogsChannel.send([
+                "Ticket Logs",
+                `**Action: ${type}**\nGuild name: ${message.guild.name}`,
+                `**User:**\n${user} (${user.id})`,
+                `**Deparment:**\n ${department}`,
+                `**Reason:**\n ${reason}`,
+                `ID:\n${id}`
+            ].join("\n")).catch(async err => {
+                await errors.couldNotLog(message, modLogs);
+            }) 
+        };
+        await tLogsChannel.send(embed)
+            .catch(async () => {
+                await errors.couldNotLog(message, modLogs);
+            });
+        await user.send(embed)
+        .catch(async () => {
+            await errors.couldNotDM(message);
+        });
+    };
+
+    client.sendPunishment = async (message, type, user, reason, modLogs, id) => {
+        let embed = new RichEmbed()
+            .setTitle("R6Bot Logs")
+            .setDescription(`**Action: ${type}**\nGuild name: ${message.guild.name}`)
+            .setColor(config.embedPink)
+            .setTimestamp()
+            .addField("User:", `${user} (${user.id})`, true)
+            .addField("Action by:", `${message.author} (${message.author.id})`, true)
+            .addField("Reason:", reason, true)
+            .setFooter(`${client.config.footer} | ID: ${id}`);
+        let modLogsChannel = message.guild.channels.find(c => c.name === modLogs);
+        if (!modLogsChannel) return await errors.couldNotLog(message, modLogs);
+        if (!modLogsChannel.permissionsFor(message.guild.me).has("EMBED_LINKS")) {
+            return await modLogsChannel.send([
+                "R6Bot Logs",
+                `**Action: ${type}**\nGuild name: ${message.guild.name}`,
+                `**User:**\n${user} (${user.id})`,
+                `**Action by:**\n ${message.author} (${message.author.id})`,
+                `**Reason:**\n ${reason}`,
+                `ID:\n${id}`
+            ].join("\n")).catch(async err => {
+                await errors.couldNotLog(message, modLogs);
+            }) 
+        };
+        await modLogsChannel.send(embed)
+            .catch(async () => {
+                await errors.couldNotLog(message, modLogs);
+            });
+        await user.send(embed)
+            .catch(async () => {
+                await errors.couldNotDM(message);
+            });
+    };
+
+    client.sendReport = async (message, user, reason, modLogs, id) => {
+        let embed = new RichEmbed()
+            .setTitle("Report")
+            .setDescription(`Guild name: ${message.guild.name}`)
+            .setColor(config.embedRed)
+            .setTimestamp()
+            .addField("User:", `${user} (${user.id})`, true)
+            .addField("Action by:", `${message.author} (${message.author.id})`, true)
+            .addField("Reason:", reason, false)
+            .setFooter(`${client.config.footer} | ID: ${id}`);
+        let reportsChannel = message.guild.channels.find(c => c.name === "reports");
+        if (!reportsChannel) return await errors.couldNotLog(message, modLogs);
+        if (!reportsChannel.permissionsFor(message.guild.me).has("EMBED_LINKS")) {
+            return await reportsChannel.send([
+                "Report",
+                `Guild name: ${message.guild.name}`,
+                `**User:**\n${user} (${user.id})`,
+                `**Action by:**\n ${message.author} (${message.author.id})`,
+                `**Reason:**\n ${reason}`,
+                `ID:\n${id}\n**R6Bot**`
+            ].join("\n")).catch(async err => {
+                await errors.couldNotLog(message, modLogs);
+            }) 
+        };
+        await reportsChannel.send(embed)
+            .catch(async () => {
+                await errors.couldNotLog(message, modLogs);
+            });
+        await user.send(embed)
+            .catch(async () => {
+                await errors.couldNotDM(message);
+            });
+    };
 
     /*
     PERMISSION LEVEL FUNCTION
@@ -84,7 +229,7 @@ module.exports = (client) => {
     and stringifies objects!
     This is mostly only used by the Eval and Exec commands.
     */
-        client.clean = async (client, text) => {
+    client.clean = async (client, text) => {
         if (text && text.constructor.name == "Promise")
             text = await text;
         if (typeof evaled !== "string")

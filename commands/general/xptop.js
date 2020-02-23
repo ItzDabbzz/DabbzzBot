@@ -18,7 +18,8 @@ module.exports = {
             .setTitle("Leaderboard")
             .setAuthor(client.user.username, client.user.avatarURL)
             .setDescription("Our top 10 xp leaders!")
-            .setColor(0x00AE86);
+            .setColor(0x00AE86)
+            .setFooter(`${client.config.footer}`);
         for(const data of top10) {
             embed.addField(client.users.get(data.user).tag, `${data.xp} xp (level ${data.level})`);
         }

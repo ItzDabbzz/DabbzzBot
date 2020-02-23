@@ -12,10 +12,9 @@ module.exports = {
                .then(function(list){
                     message.channel.bulkDelete(list);
                     const embed = new RichEmbed()
-                    .setAuthor("R6Bot")
                     .setTitle("Purge")
                     .setDescription("Purged All Messages")
-                    .setFooter("R6Bot Purge")
+                    .setFooter(`${client.config.footer} | Purge`)
                     .setTimestamp(Date.now());
                     message.channel.send(embed);
                 }, function(err){message.channel.send("ERROR: ERROR CLEARING CHANNEL.")})                        

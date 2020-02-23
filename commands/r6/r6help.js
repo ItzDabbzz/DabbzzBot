@@ -26,7 +26,8 @@ module.exports = {
         .setAuthor("R6 Help")
         .setColor("AQUA")
         .setDescription(pages[page-1])
-        .setFooter("R6 Help", message.author.displayAvatarURL);
+        .setTimestamp(Date.now())
+        .setFooter(`${client.config.footer} | R6 Help`, message.author.displayAvatarURL);
 
 	message.channel.send(embed).then(msg => { //Send the embed and pass the new message object.
 	    msg.react('⏪').then(r => { // Create fhe first reaction
@@ -44,7 +45,7 @@ module.exports = {
                 if(page === 1) return; // Cant go past page 1
                 page--; // Push back the page number if cant go back.
                 embed.setDescription(pages[page-1]); // Set Description
-                embed.setFooter(`Page ${page} of ${pages.length}`); //Set Footer
+                embed.setFooter(`${client.config.footer} | Page ${page} of ${pages.length}`); //Set Footer
                 msg.edit(embed) // Edit Message
                 r.remove(r.users.filter( u => u === message.author).first());
             });
@@ -54,7 +55,7 @@ module.exports = {
                 if(page === pages.length) return; // Cant go past max pages.
                 page++; //Push fowards page number
                 embed.setDescription(pages[page-1]); // Set Description
-                embed.setFooter(`Page ${page} of ${pages.length}`);//Set Footer
+                embed.setFooter(`${client.config.footer} | Page ${page} of ${pages.length}`);//Set Footer
                 msg.edit(embed)// Edit Message
                 r.remove(r.users.filter( u => u === message.author).first());
             });

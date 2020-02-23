@@ -1,3 +1,11 @@
 {
-  "ownerID": "94268356483362816"
+  "ownerID": "94268356483362816",
+  "prefix": "-",
+
+  "modRole": "Mod",
+  "adminRole": "Admin",
+  "systemNotice": "true",
+  "tlogChannel": "620316098390392885",
+  "clogChannel": "620316099296362506",
+  "discordinvite": "true"
 }

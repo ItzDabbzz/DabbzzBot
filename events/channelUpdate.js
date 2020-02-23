@@ -1,10 +1,11 @@
+const {Client, RichEmbed} = require("discord.js");
 // channelUpdate
 /* Emitted whenever a channel is updated - e.g. name change, topic change.
 PARAMETER        TYPE        DESCRIPTION
 oldChannel       Channel     The channel before the update
 newChannel       Channel     The channel after the update    */
 module.exports = async(oldChannel, newChannel) => {
-    const channel = oldChannel.guild.channels.find(channel => channel.name === "mod-logs")
+    const channel = newChannel.guild.channels.find(channel => channel.name === "mod-logs")
     const embed = new RichEmbed();
     embed.setTitle(`Channel ${oldChannel.name} Updated`);
     embed.setColor('#20fc3a');
@@ -13,7 +14,7 @@ module.exports = async(oldChannel, newChannel) => {
     embed.addField('Is NSFW?', (newChannel.nsfw) ? "✅" : "❌", true);
     embed.addField('Category', (newChannel.parent && oldChannel.parent.name == newChannel.parent.name) ? "Updated: ❌" : `Updated: ✅ \n New Category: ${newChannel.parent.name}`, true);
     embed.addField('Position', (oldChannel.position == newChannel.position) ? "Updated: ❌" : `Updated:  ✅ \n New Position: ${newChannel.position}`, true);
-    embed.setFooter(`ID: ${newChannel.id}`);
+    embed.setFooter(`ID: ${newChannel.id}`);0
     embed.setTimestamp();
     channel.send(embed);
 }

@@ -21,7 +21,7 @@ module.exports = {
         const created = formatDate(member.user.createdAt);
 
         const embed = new RichEmbed()
-            .setFooter(member.displayName, member.user.displayAvatarURL)
+            .setFooter(`${client.config.footer} | ${member.displayName}`, member.user.displayAvatarURL)
             .setThumbnail(member.user.displayAvatarURL)
             .setColor(member.displayHexColor === '#000000' ? '#ffffff' : member.displayHexColor)
 

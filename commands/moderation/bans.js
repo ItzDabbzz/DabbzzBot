@@ -16,6 +16,6 @@ module.exports = {
                     message.channel.send(res);
                 }
             })
-            .catch(console.error);
+            .catch(client.logger.error);
     }
 }

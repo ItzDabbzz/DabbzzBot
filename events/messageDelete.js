@@ -1,3 +1,4 @@
+const {Client, RichEmbed} = require("discord.js");
 // messageDelete
 /* Emitted whenever a message is deleted.
 PARAMETER      TYPE           DESCRIPTION

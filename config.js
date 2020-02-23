@@ -11,6 +11,8 @@ const config = {
     // Your Bot's Token. Available on https://discordapp.com/developers/applications/me
     "token": "NjczOTA5MjE3NTE3ODk1Njgx.XjheNA.JW5Z-f7xcWFN0bqkG_kM9sgBTGU",
 
+    "footer": "Dabbzz Mod Bot",
+
 
     "embedRed": "#FF0000",
     "embedOrange": "#FF7800",

@@ -1,10 +1,11 @@
+const {Client, RichEmbed} = require("discord.js");
 module.exports = async (client, error) => {
     client.logger.log(`An error event was sent by Discord.js: \n`, "error");
     const settings = client.getSettings(member.guild.id);
 
     const cChannel = settings.clogChannel;
 
-    const errorEmbed = new Discord.RichEmbed()
+    const errorEmbed = new RichEmbed()
 	.setColor('#0099ff')
 	.setTitle('WolfMC | Logs')
 	.setURL('https://wolfmc.net')

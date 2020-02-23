@@ -25,5 +25,5 @@ module.exports = (client) => {
         }
     });
 
-    console.log(table.toString());
+    client.logger.log(table.toString());
 }

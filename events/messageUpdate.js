@@ -1,10 +1,11 @@
+const {Client, RichEmbed} = require("discord.js");
 // messageUpdate
 /* Emitted whenever a message is updated - e.g. embed or content change.
 PARAMETER     TYPE           DESCRIPTION
 oldMessage    Message        The message before the update
 newMessage    Message        The message after the update    */
 module.exports = async (oldMessage, newMessage) => {
-    const channel = oldMessage.guild.channels.find(channel => channel.name === "mod-logs")
+    const channel = newMessage.guild.channels.find(channel => channel.name === "mod-logs")
     if (!channel) return;
     if (oldMessage.content === newMessage.content) return;
     if (newMessage.author.bot) return;

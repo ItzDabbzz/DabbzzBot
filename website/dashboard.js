@@ -20,7 +20,7 @@ module.exports.load = async(client) => {
   passport.use(new Strategy({
     clientID: client.user.id,
     clientSecret: `6MnvQPdLK061cvpTee6q5bGQt-ZUXgzn`,
-    callbackURL: `http://localhost:3000/login`,
+    callbackURL: `http://itzdabbzz.me:3000/login`,
     scope: scopes
   }, function(accessToken, refreshToken, profile, done) {
     process.nextTick(function() {

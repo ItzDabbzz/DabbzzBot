@@ -37,7 +37,7 @@ module.exports = {
             await client.db.updateTlogChannel(message.guild.id, response);
             return message.channel.send(`**${args[0].toProperCase()} successfully changed!**\n\`${currentLogs}\` → \`${response}\``);
 
-        } else if (args[0].toLowerCase() === "commandLogs") {
+        } else if (args[0].toLowerCase() === "commandlogs") {
             const currentLogs = await client.db.r.table("guilds").get(message.guild.id).getField("clogChannel").run();
             let response = await client.awaitReply(message, `The \`${args[0].toLowerCase()}\` is currently \`${currentLogs}\`\nWhat would you like to set \`${args[0].toLowerCase()}\` to?\n**Reply 'cancel' to cancel.**`);
             response = String(response).toLowerCase();

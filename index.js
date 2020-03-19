@@ -167,10 +167,11 @@ client.on("message", async function(message){
             await message.reply(`You've leveled up to level **${curLevel}**! Ain't that dandy?`);
             client.xp.set(key, curLevel, "level");
         }
-
-          // Discord Invite Detector
+        
+        const discInviteBool = await client.db.r.table("guilds").get(message.guild.id).getField("inviteBlocker").run();
+          // Discord Invite Detector inviteBlocker
         const invite = ['discord.gg', 'discord.io', 'discord.me'];
-        if (client.settings.discordinvite == true) {
+        if (discInviteBool == true) {
             if (invite.some(word => message.content.toLowerCase().includes(word))) {
             message.delete().catch(O_o => {});
 
@@ -186,6 +187,12 @@ client.on("message", async function(message){
             return;
             }
         };
+/**
+        const memes = message.guild.channels.find(channel => channel.name === "memes");
+
+        if(memes){
+            const meme = client.lastImageGet(memes.id);
+        }*/
         
         // Check whether the command, or alias, exist in the collections defined
         // in app.js.
@@ -287,6 +294,7 @@ PARAMETER    TYPE        DESCRIPTION
 channel      Channel     The channel that was created    */
 client.on("channelCreate", function(channel){
         const channel1 = client.channels.find(channel => channel.name === "mod-logs")
+        if(!channel1) return;
         const embed = new RichEmbed();
         embed.setTitle(`✅ Channel ${channel.name} Created ✅`);
         embed.setColor('#20fc3a');
@@ -300,7 +308,9 @@ client.on("channelCreate", function(channel){
 PARAMETER   TYPE      DESCRIPTION
 channel     Channel   The channel that was deleted    */
 client.on("channelDelete", function(channel){
+    
         const channel3 = client.channels.find(channel => channel.name === "mod-logs")
+        if(!channel3) return;
         const embed = new RichEmbed();
         embed.setTitle(`❌ Channel ${channel.name} Deleted ❌`);
         embed.setColor('#20fc3a');
@@ -379,7 +389,7 @@ guild        Guild        The created guild    */
 client.on("guildCreate", async function(guild){
     client.logger.cmd(`[GUILD JOIN] ${guild.name} (${guild.id}) added the bot. Owner: ${guild.owner.user.tag} (${guild.owner.user.id})`);
     
-    const settings = client.getSettings(guild.id);
+    //const settings = client.getSettings(guild.id);
 
     await client.db.createGuild(guild);
 });
@@ -426,6 +436,12 @@ client.on("guildMemberAdd", async function(member){
     // There's a place for more configs here.
    // member.guild.channels.find(c => c.name === settings.welcomeChannel).send(welcomeMessage).catch(console.error);
 
+    const elo = "2500";
+    const rank = "Gold";
+    const party = "None";
+    const user = member;
+
+   await client.db.createUser(client, elo, rank, party, user);
 
     //get if autoRole is enabled in the db
     const autoRoleStatus = await client.db.r.table("guilds").get(member.guild.id).getField("autoRoleEnabled").run();

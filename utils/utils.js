@@ -30,5 +30,6 @@ module.exports = {
         if (number == 8) return "\u0038\u20E3";
         if (number == 9) return "\u0039\u20E3";
         if (number == 10) return "\uD83D\uDD1F";
-    }
+    },
+    
 }

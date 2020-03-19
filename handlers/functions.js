@@ -3,6 +3,24 @@ const errors = require('./errors')
 const config = require('../config')
 module.exports = (client) => {
 
+  // get the last image posted from a channel
+  client.lastImageGet = (channelId) => {
+    return (typeof lastAttachmentUrl[channelId] !== 'undefined') ? lastAttachmentUrl[channelId] : null;
+  };
+
+  // fetch and set the last image posted from a channel
+  client.lastImageSet = (msg) => {
+    // get the first image url from a message
+    let url = /https?:\/\/.*\.(?:png|jpg|gif|jpeg)/g.exec(msg.content);
+    if (url && url[0]) {
+      lastAttachmentUrl[msg.channel.id] = url[0];
+    }
+    // get direct attachment
+    else if (typeof msg.attachments.first() !== 'undefined' && msg.attachments.first()) {
+      lastAttachmentUrl[msg.channel.id] = msg.attachments.first().url;
+    }
+  };
+
     client.findLogs = async (client, message, modLogs) => {
         const prefix = await client.db.r.table("guilds").get(message.guild.id).getField("prefix").run();
         if (!modLogs || !message.guild.channels.find(c => c.name === modLogs)) {
@@ -75,6 +93,42 @@ module.exports = (client) => {
         .catch(async () => {
             await errors.couldNotDM(message);
         });
+    };
+
+    client.sendUser = async (elo, rank, party, user, id) => {
+        let embed = new RichEmbed()
+            .setTitle(":bust_in_silhouette: User Logs")
+            .setDescription(`Guild name: ${user.guild.name}`)
+            .setColor(config.embedAqua)
+            .setTimestamp()
+            .addField("User:", `${user} (${user.id})`, true)
+            .addField("Elo:", `${elo}`, true)
+            .addField("Rank:", `${rank}`, true)
+            .addField("Party:", party, true)
+            .setFooter(`${client.config.footer}| ID: ${id}`);
+        let modLogsChannel = user.guild.channels.find(c => c.name === "mod-logs");
+        if (!modLogsChannel) return await errors.couldNotLog(message, "mod-logs");
+        if (!modLogsChannel.permissionsFor(user.guild.me).has("EMBED_LINKS")) {
+            return await modLogsChannel.send([
+                "User Logs",
+                `**Action: ${type}**\nGuild name: ${user.guild.name}`,
+                `**User:**\n${user} (${user.id})`,
+                `**Elo:**\m${elo}`,
+                `**Rank:**\n ${rank}`,
+                `**Party:**\n ${party}`,
+                `ID:\n${id}`
+            ].join("\n")).catch(async err => {
+                //await errors.couldNotLog(message, modLogs);
+            }) 
+        };
+        await modLogsChannel.send(embed)
+            .catch(async () => {
+                //await errors.couldNotLog(message, modLogs);
+            });
+        //await user.send(embed)
+        //.catch(async () => {
+            //await errors.couldNotDM(message);
+        //});
     };
 
     client.sendPunishment = async (message, type, user, reason, modLogs, id) => {
@@ -175,6 +229,7 @@ module.exports = (client) => {
     the default settings are used.
     */
 
+    /*
     // THIS IS HERE BECAUSE SOME PEOPLE DELETE ALL THE GUILD SETTINGS
     // And then they're stuck because the default settings are also gone.
     // So if you do that, you're resetting your defaults. Congrats.
@@ -201,7 +256,7 @@ module.exports = (client) => {
         // This "..." thing is the "Spread Operator". It's awesome!
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
         return ({...client.settings.get("default"), ...guildConf});
-    };
+    };*/
 
     /*
     SINGLE-LINE AWAITMESSAGE

@@ -30,7 +30,9 @@ module.exports = class {
             autoRoleEnabled: false,
             autoRoleName: "Member",
             tlogChannel: "00000000000000000",
-            reportsChannel: "00000000000000000"
+            reportsChannel: "00000000000000000",
+            ticketsEnabled: true,
+            inviteBlocker: true
           }]).run()
           .catch((e) => console.log(e))
       }
@@ -71,6 +73,18 @@ module.exports = class {
           time: client.db.r.now()
         }]).run()
         .then(r => client.sendTicket(message, channel, department, user, reason, r.generated_keys))
+        .catch((e) => console.log(e))
+      }
+
+      async createUser(client, elo, rank, party, user) {
+        return this.r.table("users").insert([{
+          elo: elo,
+          rank: rank,
+          party: party,
+          user: `${user.id}`,
+          time: client.db.r.now()
+        }]).run()
+        .then(r => client.sendUser(elo, rank, party, user, r.generated_keys))
         .catch((e) => console.log(e))
       }
 
